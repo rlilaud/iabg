@@ -9,8 +9,6 @@ def intersight_get(resource_path, private_key,
     # Load Public/Private Keys
     isREST.set_private_key(private_key)
     isREST.set_public_key(public_key)
-    #isREST.set_private_key(open(r".\keys\private_key.pem", "r") .read())
-    #isREST.set_public_key(open(r".\keys\public_key.txt", "r") .read())
     if query_params!=None:
         options = {
             "http_method": "get",
@@ -24,8 +22,15 @@ def intersight_get(resource_path, private_key,
             }
             
     #-- Send GET Request --#
-    results = isREST.intersight_call(**options)
-    print("Status Code: " + str(results.status_code))
-    #data = json.dumps(results.json())
-    #pp.pprint(results.json(), indent=2)
-    return results.json()
+    try:
+        results = isREST.intersight_call(**options)
+        #print("Status Code: " + str(results.status_code))
+        print("Status code {}, for resource path {}".format(results.status_code, resource_path))
+        results=results.json()
+        
+    except ValueError:
+        print("RSA Key error - check intersight private and public keys.")
+        results=None
+        pass
+
+    return results

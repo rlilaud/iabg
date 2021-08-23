@@ -68,6 +68,9 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
+                    <i class="fas fa-server"></i>
+                    <!-- Page Heading -->
+                        <h6 class="h3 mb-0 text-gray-800">  Intersight As Built Generator</h6>
 
                 </nav>
                 <!-- End of Topbar -->
@@ -77,7 +80,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Intersight As Built Generator</h1>
+                        <h6 class="h3 mb-0 text-gray-800">Enter intersight API keys below and click "Generate", updated document templates will be saved to the links on the right.</h6>
                     </div>
 
 
@@ -87,7 +90,8 @@
                             <!-- Approach -->
                             <div class="card shadow mb-4">
                                <div class="card-header py-3">
-                                   <h6 class="m-0 font-weight-bold text-primary">Enter the Intersight API Keys</h6>
+                                   <i class="fab fa-python"></i>
+                                   <span class="m-0 font-weight-bold text-primary">Enter the Intersight API Keys</span>
                                </div>
                                <div class="card-body">
                                 <form method="POST" class="post-form">{% csrf_token %}
@@ -97,7 +101,7 @@
                                     <button type="submit" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-md"><i
                                         class="fas fa-code fa-md text-white-50"></i> Generate</a></button>
                                 </form>
-                                <p> Upon completion, your updated templates will be available for download from the right <i class="fas fa-arrow-circle-right"></i></p>
+                                <p> When processed, updated templates will be saved to the links on the right <i class="fas fa-arrow-circle-right"></i></p>
                                 <p>
                                     Note: Generate and download your API keys for above fields from <a href="https://intersight.com/an/settings/api-keys"> Intersight.</a>
                                 </p>
@@ -109,7 +113,8 @@
                          <!-- Approach -->
                          <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">About</h6>
+                                <i class="far fa-question-circle"></i>
+                                <span class="m-0 font-weight-bold text-primary">About</span>
                             </div>
                             <div class="card-body">
                                 <p>Paste the <a href="https://intersight.com/an/settings/api-keys"> Intersight API keys.</a> in the fields on the left abd click Generate.</p>
@@ -120,7 +125,8 @@
 
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Report Template Downloads</h6>
+                                <i class="fas fa-file-word"></i>
+                                <span class="m-0 font-weight-bold text-primary">Report Template Downloads</span>
                             </div>
                             <div class="card-body">
                                 <div class="container">

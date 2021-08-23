@@ -6,6 +6,7 @@ urlpatterns = [
     path('', views.index, name="index"),
     path('abg.html', views.abg, name="abg"),
     path('index.html', views.index, name="index"),
+    path('broke.html', views.broken, name="broke"),
     path('charts.html', views.charts, name="charts"),
     path('tables.html', views.tables, name="tables"),
     path('cards.html', views.cards, name="cards"),

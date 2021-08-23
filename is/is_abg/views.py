@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib import messages
 
 from .models import iabgInputForm
 from .custom_apps.intersight_rest import intersight_get
@@ -16,6 +17,9 @@ def index(request):
 
 def charts(request):
     return render(request,'is_abg/charts.html')
+
+def broken(request):
+    return render(request,'is_abg/broke.html')
 
 def ua(request):
     return render(request,'is_abg/utilities-animation.html')
@@ -38,10 +42,6 @@ def cards(request):
 def tables(request):
     return render(request,'is_abg/tables.html')
 
-#def abg(request):
-#	return render(request,'is_abg/abg.html')
-
-
 def abg(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -53,10 +53,10 @@ def abg(request):
                 i.delete()
             post = form.save(commit=False)
             post.save()
-
             for i in iabgInputForm.objects.all():
                 blade_server = intersight_get(resource_path='/compute/Blades', 
                     private_key=i.private_api_key, public_key=i.public_api_key)
+
                 compute_summary = intersight_get(
                     resource_path='/compute/PhysicalSummaries',
                     private_key=i.private_api_key, public_key=i.public_api_key,
@@ -110,6 +110,10 @@ def abg(request):
                     private_key=i.private_api_key, 
                     public_key=i.public_api_key,
                     query_params={"$select": "Dn,Ipv4Address,Ipv4Mask,Ipv4Gateway,MacAddress"})
+                
+                if firmware_running == None:
+                    return render(request, 'is_abg/broke.html')
+
                 management_df = pd.DataFrame.from_dict(management_address['Results'])
                 management_df = management_df.drop(columns=['ClassId', 'Moid', 'ObjectType'])
                 service_profile_df = pd.DataFrame.from_dict(service_profile['Results'])
@@ -143,6 +147,7 @@ def abg(request):
                 compute_summary_df = pd.DataFrame.from_dict(compute_summary['Results'])
                 compute_summary_df = compute_summary_df.drop(columns=['ClassId', 'Moid', 'ObjectType'])
                 blade_server_df = pd.DataFrame.from_dict(blade_server['Results'])
+
 
                 doc = create_word_doc_title(doc_title = 'Introduction')
 
@@ -185,7 +190,6 @@ def abg(request):
                 # Management
                 doc = create_word_doc_paragraph(doc = doc, heading_text = 'Management')
                 doc = create_word_doc_table(doc, management_df)
-                print (os.getcwd())
                 doc.save(r'staticfiles\mediafiles\intersight-demo.docx')
                 
                 
