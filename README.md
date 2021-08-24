@@ -26,6 +26,10 @@ Enter your intersight API keys using the form on the left, documents will be out
 Word Template:
 ![alt text](https://github.com/j-sulliman/j-sulliman.github.io/blob/master/images/word.PNG?raw=true)
 
+
+Word Template:
+![alt text](https://github.com/j-sulliman/j-sulliman.github.io/blob/master/images/word.PNG?raw=true)
+
 Excel Workbook:
 ![alt text](https://github.com/j-sulliman/j-sulliman.github.io/blob/master/images/excel.PNG?raw=true)
 
