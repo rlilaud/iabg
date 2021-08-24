@@ -21,19 +21,16 @@ Overview:
 
 
 Enter your intersight API keys using the form on the left, documents will be output for download on the right:
+![alt text](https://github.com/j-sulliman/j-sulliman.github.io/blob/master/images/iABG_Example.PNG?raw=true)
 
 
 Word Template:
-![alt text](https://github.com/j-sulliman/j-sulliman.github.io/blob/master/images/word.PNG?raw=true)
-
-
-Word Template:
-![alt text](https://github.com/j-sulliman/j-sulliman.github.io/blob/master/images/word.PNG?raw=true)
+![alt text](https://github.com/j-sulliman/j-sulliman.github.io/blob/master/images/word_example.PNG?raw=true)
 
 Excel Workbook:
 ![alt text](https://github.com/j-sulliman/j-sulliman.github.io/blob/master/images/excel.PNG?raw=true)
 
-Drawio Diagram (update as needed):
+Drawio Diagram:
 ![alt text](https://github.com/j-sulliman/j-sulliman.github.io/blob/master/images/is_diagram.PNG?raw=true)
 
 # Demo
