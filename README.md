@@ -2,7 +2,7 @@
 
 # iABG - Intersight AsBuilt Generator
 
-Autmatic generation of AsBuilt documents for intersight
+Autmatic generation of base AsBuilt documents for intersight.
 
 Reports on:
 * Firmware
@@ -17,7 +17,11 @@ Overview:
 * Django and Bootrap4 provide the web front end to receive user input (intersight API keys) by way of a form
 * Data retrieved from API call is stored in a dataframe using the pandas module
 * Dataframes then written to an excel workbook
-* Word report generated using the pythob-docx package
+* Word report generated using the python-docx package
+* drawio topology template included for reference also
+
+# Demo
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/EjcmM4tDglg/0.jpg)](http://www.youtube.com/watch?v=EjcmM4tDglg "iABG")
 
 
 Enter your intersight API keys using the form on the left, documents will be output for download on the right:
@@ -33,69 +37,38 @@ Excel Workbook:
 Drawio Diagram:
 ![alt text](https://github.com/j-sulliman/j-sulliman.github.io/blob/master/images/is_diagram.PNG?raw=true)
 
-# Demo
-[![IMAGE ALT TEXT](http://img.youtube.com/vi/EjcmM4tDglg/0.jpg)](http://www.youtube.com/watch?v=EjcmM4tDglg "iABG")
+
 
 # Setup
-```
-$ python3 -m venv venv
+```powershell
+python -m venv venv
 
-$ source venv/bin/activate
-
-$ git init
-
-$ git pull https://github.com/j-sulliman/acici.git
+.\venv\Scripts\activate
+git init
+git pull https://github.com/j-sulliman/iabg.git
 
 Install the required dependencies:
+cd is
+pip install -r .\requirements.txt
 
-$ pip3 install -r requirements.txt
+Installing collected packages: urllib3, six, idna, charset-normalizer, certifi, sqlparse, requests, pytz, python-dateutil, pycryptodomex, pycryptodome, numpy, lxml, et-xmlfile, asgiref, python-docx, pandas, openpyxl, intersight-rest, Django
+Successfully installed Django-3.2.6 asgiref-3.4.1 certifi-2021.5.30 charset-normalizer-2.0.4 et-xmlfile-1.1.0 idna-3.2 intersight-rest-1.1.7 lxml-4.6.3 numpy-1.21.2 openpyxl-3.0.7 pandas-1.3.2 pycryptodome-3.10.1 pycryptodomex-3.10.1 python-dateutil-2.8.2 python-docx-0.8.11 pytz-2021.1 requests-2.26.0 six-1.16.0 sqlparse
+
+
 ```
 
 # Start Django Server
 ```
-$ python3 manage.py runserver 0:8080
+python .\manage.py runserver 0.0.0.0:8080
 
 Watching for file changes with StatReloader
 Performing system checks...
 
 System check identified no issues (0 silenced).
-July 18, 2019 - 13:17:42
-Django version 2.2.2, using settings 'nxos_aci.settings'
-Starting development server at http://0:8080/
-Quit the server with CONTROL-C.
+August 24, 2021 - 10:29:29
+Django version 3.2.6, using settings 'is.settings'
+Starting development server at http://0.0.0.0:8080/
+Quit the server with CTRL-BREAK.
 ```
 
-# Logon and Import NXOS file
-i.e. http://127.0.0.1:8080
-Login as admin/C1sc0123
 
-Menu --> Upload Config File
-![alt text](https://github.com/j-sulliman/nxos_to_aci/blob/master/Screen%20Shot%202019-07-18%20at%201.23.58%20PM.png)
-
-Provide the defaults for configuration naming convention and BD construct.  BD mode in most cases should be l2 which will enable ARP and BUM flooding.  L3 mode will enable unicast routing and configure the SVI address as a BD Subnet.  EPGs will be created as "Preferred group - Include" members.
-![alt text](https://github.com/j-sulliman/nxos_to_aci/blob/master/Screen%20Shot%202019-07-18%20at%201.26.01%20PM.png)
-
-
-View and Edit the Imported configuration
-![alt text](https://github.com/j-sulliman/nxos_to_aci/blob/master/Screen%20Shot%202019-07-18%20at%201.51.46%20PM.png)
- 
-Enter the APIC connection info and submit
-![alt text](https://github.com/j-sulliman/nxos_to_aci/blob/master/Screen%20Shot%202019-07-18%20at%201.52.47%20PM.png)
-
-
-View the resulting JSON and HTTP Post status code
-![alt text](https://github.com/j-sulliman/nxos_to_aci/blob/master/Screen%20Shot%202019-07-18%20at%201.56.15%20PM.png)
-- Object configuration and DN/URL can be used with other REST API clients - i.e. postman, curl, or paste directly into APIC
-
-Check the APIC
-![alt text](https://github.com/j-sulliman/nxos_to_aci/blob/master/Screen%20Shot%202019-07-18%20at%201.57.24%20PM.png)
-
-# Create associated fabric access policies and L3Os manually
-Rationale - items like Physical domain, vlan pools to legacy network will likely only be configured once.  
-Fabric access policies therefore less far less time consuming than tenant policy.
-
-L3O configuration is environment dependant.
-
-# Disclaimer
-Tested against NXOS 7.X configuration files, may work with IOS but needs testing.
-Use at your own risk - recommend dry-run against a simulator or non-prod APIC
