@@ -1,5 +1,3 @@
-# iabg
-
 # iABG - Intersight AsBuilt Generator
 
 Autmatic generation of base AsBuilt documents for intersight.
@@ -20,7 +18,7 @@ Overview:
 * Word report generated using the python-docx package
 * drawio topology template included for reference also
 
-# Demo
+# Demo (click to view)
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/EjcmM4tDglg/0.jpg)](http://www.youtube.com/watch?v=EjcmM4tDglg "iABG")
 
 
