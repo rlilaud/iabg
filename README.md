@@ -21,7 +21,11 @@ Overview:
 
 
 Post imported objects to APIC (EPGS are be default included in a preferred group)
-![alt text](https://github.com/j-sulliman/acici/blob/master/Screen%20Shot%202019-07-19%20at%2010.38.25%20AM.png)
+
+
+![alt text](https://github.com/j-sulliman/j-sulliman.github.io/blob/master/images/word.PNG?raw=true)
+
+![alt text](https://github.com/j-sulliman/j-sulliman.github.io/blob/master/images/excel.PNG?raw=true)
 
 # Demo
 https://youtu.be/V_Qyy2QHGVY
