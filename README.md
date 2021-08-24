@@ -20,12 +20,17 @@ Overview:
 * Word report generated using the pythob-docx package
 
 
-Post imported objects to APIC (EPGS are be default included in a preferred group)
+Enter your intersight API keys using the form on the left, documents will be output for download on the right:
 
 
+Word Template:
 ![alt text](https://github.com/j-sulliman/j-sulliman.github.io/blob/master/images/word.PNG?raw=true)
 
+Excel Workbook:
 ![alt text](https://github.com/j-sulliman/j-sulliman.github.io/blob/master/images/excel.PNG?raw=true)
+
+Drawio Diagram (update as needed):
+![alt text](https://github.com/j-sulliman/j-sulliman.github.io/blob/master/images/is_diagram.PNG?raw=true)
 
 # Demo
 https://youtu.be/V_Qyy2QHGVY
