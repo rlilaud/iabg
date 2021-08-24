@@ -34,9 +34,7 @@ Drawio Diagram:
 ![alt text](https://github.com/j-sulliman/j-sulliman.github.io/blob/master/images/is_diagram.PNG?raw=true)
 
 # Demo
-
-<iframe width="700" height="400" src="https://www.youtube.com/embed/EjcmM4tDglg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/EjcmM4tDglg/0.jpg)](http://www.youtube.com/watch?v=EjcmM4tDglg "iABG")
 
 # Setup
 ```
