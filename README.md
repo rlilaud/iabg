@@ -53,6 +53,7 @@ $ source venv/bin/activate
 ```
 
 *Pull the repo from git*
+```bash
 git init
 git pull https://github.com/j-sulliman/iabg.git
 
