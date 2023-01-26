@@ -94,6 +94,8 @@
                                    <span class="m-0 font-weight-bold text-primary">Enter the Intersight API Keys</span>
                                </div>
                                <div class="card-body">
+                                   <p><b>This tool is only compatible with API Keys for OpenAPI Schema version 2.</b></p>
+                                   <p>If you don't see a form to put your public and secret keys, please click on "<a href="/abg.html">iABG</a>"</p>
                                 <form method="POST" class="post-form">{% csrf_token %}
                                     <div class="form-group">
                                     {{ form.as_p }}
