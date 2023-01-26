@@ -54,7 +54,7 @@ def abg(request):
             post = form.save(commit=False)
             post.save()
             for i in iabgInputForm.objects.all():
-                blade_server = intersight_get(resource_path='/compute/Blades', 
+                blade_server = intersight_get(resource_path='/compute/Blades',
                     private_key=i.private_api_key, public_key=i.public_api_key)
 
                 compute_summary = intersight_get(
@@ -69,27 +69,27 @@ def abg(request):
                     resource_path='/ether/PhysicalPorts',
                     private_key=i.private_api_key, public_key=i.public_api_key,
                     query_params={
-                        "$filter": "OperState eq 'up'", 
+                        "$filter": "OperState eq 'up'",
                         "$orderby": "Dn",
                         "$select": "AggregatePortId,Mode,Dn,OperSpeed,OperState,PeerDn,TransceiverType"
                                 })
                 fc_ports = intersight_get(resource_path='/fc/PhysicalPorts',
-                    private_key=i.private_api_key, 
-                    public_key=i.public_api_key, 
+                    private_key=i.private_api_key,
+                    public_key=i.public_api_key,
                     query_params={
-                        "$filter": "OperState eq 'up'", 
+                        "$filter": "OperState eq 'up'",
                         "$orderby": "Dn",
                         "$select": "PortChannelId,OperSpeed,Dn,Mode,OperState,Wwn"
                         })
                 firmware_running = intersight_get(resource_path='/firmware/RunningFirmwares',
-                    private_key=i.private_api_key, 
+                    private_key=i.private_api_key,
                     public_key=i.public_api_key,
-                    query_params={ 
-                        "$orderby": "Type", 
+                    query_params={
+                        "$orderby": "Type",
                         "$select": "Dn,Type,Version,PackageVersion,ObjectType,Component"})
                 hyperflex_cluster = intersight_get(resource_path='/hyperflex/Clusters',
                     private_key=i.private_api_key,
-                    public_key=i.public_api_key, 
+                    public_key=i.public_api_key,
                     query_params={
                         "$select": "Summary"})
                 hyperflex_node = intersight_get(resource_path='/hyperflex/Nodes',
@@ -98,54 +98,69 @@ def abg(request):
                     query_params={
                         "$select": "DisplayVersion,HostName,Ip,ModelNumber,Role,SerialNumber,Status,Version"})
                 hyperflex_health = intersight_get(resource_path='/hyperflex/Healths',
-                    private_key=i.private_api_key, 
-                    public_key=i.public_api_key, 
+                    private_key=i.private_api_key,
+                    public_key=i.public_api_key,
                     query_params={"$select": "ResiliencyDetails"})
 
-                service_profile = intersight_get(resource_path='/ls/ServiceProfiles',
-                    private_key=i.private_api_key, 
-                    public_key=i.public_api_key, 
-                                    query_params={"$filter": "AssignState eq 'assigned'", "$orderby": "OperState"})
+                # Due to new call in the API, ls/ServiceProfiles is deprecated
+                # service_profile = intersight_get(resource_path='/ls/ServiceProfiles',
+                #     private_key=i.private_api_key,
+                #     public_key=i.public_api_key,
+                #                     query_params={"$filter": "AssignState eq 'assigned'", "$orderby": "OperState"})
+                service_profile = intersight_get(resource_path='/server/Profiles',
+                                                 private_key=i.private_api_key,
+                                                 public_key=i.public_api_key,
+                                                 query_params={"$filter": "AssignedServer ne 'null'",
+                                                               "$orderby": "ModTime"})
                 management_address = intersight_get(resource_path='/management/Interfaces',
-                    private_key=i.private_api_key, 
+                    private_key=i.private_api_key,
                     public_key=i.public_api_key,
                     query_params={"$select": "Dn,Ipv4Address,Ipv4Mask,Ipv4Gateway,MacAddress"})
-                
+
                 if firmware_running == None:
                     return render(request, 'is_abg/broke.html')
 
                 management_df = pd.DataFrame.from_dict(management_address['Results'])
-                management_df = management_df.drop(columns=['ClassId', 'Moid', 'ObjectType'])
+                management_df = management_df.drop(columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
                 service_profile_df = pd.DataFrame.from_dict(service_profile['Results'])
                 service_profile_df = service_profile_df.drop(columns=['ClassId', 'Moid', 'ObjectType',
-                    'Owners', 'DeviceMoId', 'DomainGroupMoid','CreateTime','PermissionResources',
-                    'RegisteredDevice', 'Rn', 'SharedScope', 'Tags', 'ModTime', 'AccountMoid'])
+                    'Owners', 'DeviceMoId', 'DomainGroupMoid', 'CreateTime', 'PermissionResources',
+                    'RegisteredDevice', 'Rn', 'SharedScope', 'Tags', 'ModTime', 'AccountMoid'], errors='ignore')
                 hyperflex_health_df = pd.DataFrame.from_dict(hyperflex_health['Results'])
                 hyperflex_node_df = pd.DataFrame.from_dict(hyperflex_node['Results'])
-                hyperflex_node_df = hyperflex_node_df.drop(columns=['ClassId', 'Moid', 'ObjectType'])
-            
-            
+                hyperflex_node_df = hyperflex_node_df.drop(columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
+                hyperflex_cluster_df_list = []
+                for i in hyperflex_cluster['Results']:
+                    #pp.pprint(i['Summary'])
+                    hyperflex_cluster_df = pd.DataFrame.from_dict(i['Summary'])
+                    hyperflex_cluster_df = hyperflex_cluster_df.drop(columns=['ClassId', 'ObjectType', 'Boottime',
+                        'CompressionSavings','DeduplicationSavings','Downtime', 'HealingInfo',
+                        'ResiliencyDetails','ResiliencyInfo','ResiliencyDetailsSize','TotalSavings'], errors='ignore')
+                    hyperflex_cluster_df.drop_duplicates()
+                    hyperflex_cluster_df_list.append(hyperflex_cluster_df)
+
+
 
                 firmware_running_df = pd.DataFrame.from_dict(firmware_running['Results'])
-                firmware_running_df = firmware_running_df.drop(columns=['ClassId', 'Moid', 'ObjectType'])
+                firmware_running_df = firmware_running_df.drop(columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
                 fc_ports_df = pd.DataFrame.from_dict(fc_ports['Results'])
-                fc_ports_df = fc_ports_df.drop(columns=['ClassId', 'Moid', 'ObjectType'])
+                fc_ports_df = fc_ports_df.drop(columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
                 physical_ports_df = pd.DataFrame.from_dict(physical_ports['Results'])
-                physical_ports_df = physical_ports_df.drop(columns=['ClassId', 'Moid', 'ObjectType'])
+                physical_ports_df = physical_ports_df.drop(columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
                 rack_server_df = pd.DataFrame.from_dict(rack_server['Results'])
                 compute_summary_df = pd.DataFrame.from_dict(compute_summary['Results'])
-                compute_summary_df = compute_summary_df.drop(columns=['ClassId', 'Moid', 'ObjectType'])
+                compute_summary_df = compute_summary_df.drop(columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
                 blade_server_df = pd.DataFrame.from_dict(blade_server['Results'])
 
                 firmware_running_df = pd.DataFrame.from_dict(firmware_running['Results'])
-                firmware_running_df = firmware_running_df.drop(columns=['ClassId', 'Moid', 'ObjectType'])
+                firmware_running_df = firmware_running_df.drop(columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
                 fc_ports_df = pd.DataFrame.from_dict(fc_ports['Results'])
-                fc_ports_df = fc_ports_df.drop(columns=['ClassId', 'Moid', 'ObjectType'])
+                fc_ports_df = fc_ports_df.drop(columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
                 physical_ports_df = pd.DataFrame.from_dict(physical_ports['Results'])
-                physical_ports_df = physical_ports_df.drop(columns=['ClassId', 'Moid', 'ObjectType'])
+                physical_ports_df = physical_ports_df.drop(columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
                 rack_server_df = pd.DataFrame.from_dict(rack_server['Results'])
                 compute_summary_df = pd.DataFrame.from_dict(compute_summary['Results'])
-                compute_summary_df = compute_summary_df.drop(columns=['ClassId', 'Moid', 'ObjectType'])
+                compute_summary_df = compute_summary_df.drop(columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
                 blade_server_df = pd.DataFrame.from_dict(blade_server['Results'])
 
 
@@ -159,7 +174,7 @@ def abg(request):
                 # Firmware
                 doc = create_word_doc_paragraph(doc = doc, heading_text = 'Firmware')
                 doc = create_word_doc_table(doc, firmware_running_df)
-                
+
                 # Interfaces section
                 doc = create_word_doc_paragraph(doc = doc, heading_text = 'Physical Ports')
                 doc = create_word_doc_table(doc, physical_ports_df)
@@ -169,14 +184,8 @@ def abg(request):
 
                 # HyperFlex Section
                 doc = create_word_doc_paragraph(doc = doc, heading_text = 'HyperFlex Cluster')
-                for i in hyperflex_cluster['Results']:
-                    #pp.pprint(i['Summary'])
-                    hyperflex_cluster_df = pd.DataFrame.from_dict(i['Summary'])
-                    hyperflex_cluster_df = hyperflex_cluster_df.drop(columns=['ClassId', 'ObjectType', 'Boottime',
-                        'CompressionSavings','DeduplicationSavings','Downtime', 'HealingInfo', 
-                        'ResiliencyDetails','ResiliencyInfo','ResiliencyDetailsSize','TotalSavings'])
-                    hyperflex_cluster_df.drop_duplicates()
-                    doc = create_word_doc_table(doc, hyperflex_cluster_df)
+                for hyperflex_cluster_unit_df in hyperflex_cluster_df_list:
+                    doc = create_word_doc_table(doc, hyperflex_cluster_unit_df)
 
                 doc = create_word_doc_paragraph(doc = doc, heading_text = 'HyperFlex Node Detail')
                 doc = create_word_doc_table(doc, hyperflex_node_df)
@@ -190,16 +199,18 @@ def abg(request):
                 # Management
                 doc = create_word_doc_paragraph(doc = doc, heading_text = 'Management')
                 doc = create_word_doc_table(doc, management_df)
-                doc.save(r'staticfiles\mediafiles\intersight-demo.docx')
-                
-                
-                
-                with pd.ExcelWriter(r'staticfiles\mediafiles\intersight_output.xlsx') as writer:  
+                doc.save(r'staticfiles/mediafiles/intersight-demo.docx')
+
+
+
+                with pd.ExcelWriter(r'staticfiles/mediafiles/intersight_output.xlsx') as writer:
                     management_df.to_excel(writer, sheet_name='management')
                     service_profile_df.to_excel(writer, sheet_name='service_profile')
                     hyperflex_health_df.to_excel(writer, sheet_name='hyperflex_health')
                     hyperflex_node_df.to_excel(writer, sheet_name='hyperflex_node')
-                    hyperflex_cluster_df.to_excel(writer, sheet_name='hyperflex_cluster')
+                    for hyperflex_cluster_unit_df in hyperflex_cluster_df_list:
+                        sheet_name = 'hyperflex_cluster' + hyperflex_cluster_unit_df["Name"].values[0]
+                        hyperflex_cluster_unit_df.to_excel(writer, sheet_name=sheet_name)
                     firmware_running_df.to_excel(writer, sheet_name='firmware_running')
                     fc_ports_df.to_excel(writer, sheet_name='fc_ports')
                     physical_ports_df.to_excel(writer, sheet_name='physical_ports')
