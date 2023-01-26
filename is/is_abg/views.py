@@ -222,7 +222,7 @@ def abg(request):
                     hyperflex_health_df.to_excel(writer, sheet_name='hyperflex_health')
                     hyperflex_node_df.to_excel(writer, sheet_name='hyperflex_node')
                     for hyperflex_cluster_unit_df in hyperflex_cluster_df_list:
-                        sheet_name = 'hyperflex_cluster' + hyperflex_cluster_unit_df["Name"].values[0]
+                        sheet_name = 'hyperflex_cluster_' + hyperflex_cluster_unit_df["Name"].values[0]
                         hyperflex_cluster_unit_df.to_excel(writer, sheet_name=sheet_name)
                     firmware_running_df.to_excel(writer, sheet_name='firmware_running')
                     fc_ports_df.to_excel(writer, sheet_name='fc_ports')
