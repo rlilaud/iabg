@@ -214,7 +214,7 @@ def abg(request):
                 # Management
                 doc = create_word_doc_paragraph(doc=doc, heading_text='Management')
                 doc = create_word_doc_table(doc, management_df)
-                doc.save(r'staticfiles/mediafiles/intersight-demo.docx')
+                doc.save(r'staticfiles/mediafiles/intersight_output.docx')
 
                 with pd.ExcelWriter(r'staticfiles/mediafiles/intersight_output.xlsx') as writer:
                     management_df.to_excel(writer, sheet_name='management')
