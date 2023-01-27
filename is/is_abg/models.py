@@ -24,6 +24,7 @@ class iabgInputForm(models.Model):
                                      default='both', choices=document_choices)
     document_author = models.CharField(max_length=200, default='First-name Last-name')
     customer_name = models.CharField(max_length=200, default='Demo Intersight Customr')
+    host = models.TextField(default='https://intersight.com', )
     private_api_key = models.TextField(default='Enter the Intersight Private Key', )
     public_api_key = models.TextField(default='Enter the Intersight Key ID')
     Select_Document_Sections = models.CharField(max_length=200, default='All',

@@ -65,26 +65,26 @@ def abg(request):
             post.save()
             for i in iabgInputForm.objects.all():
                 blade_server = intersight_get(resource_path='/compute/Blades',
-                                              private_key=i.private_api_key, public_key=i.public_api_key)
+                                              host=i.host, private_key=i.private_api_key, public_key=i.public_api_key)
 
                 compute_summary = intersight_get(
                     resource_path='/compute/PhysicalSummaries',
-                    private_key=i.private_api_key, public_key=i.public_api_key,
+                    host=i.host, private_key=i.private_api_key, public_key=i.public_api_key,
                     query_params={
                         "$select": "AvailableMemory,CpuCapacity,Dn,Firmware,Model,Name,OperPowerState,OperState"
                     })
                 rack_server = intersight_get(resource_path='/compute/RackUnits',
-                                             private_key=i.private_api_key, public_key=i.public_api_key)
+                                             host=i.host, private_key=i.private_api_key, public_key=i.public_api_key)
                 physical_ports = intersight_get(
                     resource_path='/ether/PhysicalPorts',
-                    private_key=i.private_api_key, public_key=i.public_api_key,
+                    host=i.host, private_key=i.private_api_key, public_key=i.public_api_key,
                     query_params={
                         "$filter": "OperState eq 'up'",
                         "$orderby": "Dn",
                         "$select": "AggregatePortId,Mode,Dn,OperSpeed,OperState,PeerDn,TransceiverType"
                     })
                 fc_ports = intersight_get(resource_path='/fc/PhysicalPorts',
-                                          private_key=i.private_api_key,
+                                          host=i.host, private_key=i.private_api_key,
                                           public_key=i.public_api_key,
                                           query_params={
                                               "$filter": "OperState eq 'up'",
@@ -92,38 +92,38 @@ def abg(request):
                                               "$select": "PortChannelId,OperSpeed,Dn,Mode,OperState,Wwn"
                                           })
                 firmware_running = intersight_get(resource_path='/firmware/RunningFirmwares',
-                                                  private_key=i.private_api_key,
+                                                  host=i.host, private_key=i.private_api_key,
                                                   public_key=i.public_api_key,
                                                   query_params={
                                                       "$orderby": "Type",
                                                       "$select": "Dn,Type,Version,PackageVersion,ObjectType,Component"})
                 hyperflex_cluster = intersight_get(resource_path='/hyperflex/Clusters',
-                                                   private_key=i.private_api_key,
+                                                   host=i.host, private_key=i.private_api_key,
                                                    public_key=i.public_api_key,
                                                    query_params={
                                                        "$select": "Summary"})
                 hyperflex_node = intersight_get(resource_path='/hyperflex/Nodes',
-                                                private_key=i.private_api_key,
+                                                host=i.host, private_key=i.private_api_key,
                                                 public_key=i.public_api_key,
                                                 query_params={
                                                     "$select": "DisplayVersion,HostName,Ip,ModelNumber,Role,SerialNumber,Status,Version"})
                 hyperflex_health = intersight_get(resource_path='/hyperflex/Healths',
-                                                  private_key=i.private_api_key,
+                                                  host=i.host, private_key=i.private_api_key,
                                                   public_key=i.public_api_key,
                                                   query_params={"$select": "ResiliencyDetails"})
 
                 # Due to new call in the API, ls/ServiceProfiles is deprecated
                 # service_profile = intersight_get(resource_path='/ls/ServiceProfiles',
-                #     private_key=i.private_api_key,
+                #     host=i.host, private_key=i.private_api_key,
                 #     public_key=i.public_api_key,
                 #                     query_params={"$filter": "AssignState eq 'assigned'", "$orderby": "OperState"})
                 service_profile = intersight_get(resource_path='/server/Profiles',
-                                                 private_key=i.private_api_key,
+                                                 host=i.host, private_key=i.private_api_key,
                                                  public_key=i.public_api_key,
                                                  query_params={"$filter": "AssignedServer ne 'null'",
                                                                "$orderby": "ModTime"})
                 management_address = intersight_get(resource_path='/management/Interfaces',
-                                                    private_key=i.private_api_key,
+                                                    host=i.host, private_key=i.private_api_key,
                                                     public_key=i.public_api_key,
                                                     query_params={
                                                         "$select": "Dn,Ipv4Address,Ipv4Mask,Ipv4Gateway,MacAddress"})

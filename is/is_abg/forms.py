@@ -27,6 +27,7 @@ class iabgForm(forms.ModelForm):
     class Meta:
         model = iabgInputForm
         fields = (
+            'host',
             'public_api_key',
             'private_api_key',
         )
