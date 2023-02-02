@@ -50,20 +50,34 @@ pip install -r ./requirements.txt
 
 NOTE: When you create your API key on Intersight, you need to choose: "*API key for OpenAPI schema version 2*"
 
-To run iABG, you only need to run the `./is/main.py` script. You will then get a prompt asking if you want to change the default address of Intersight. Leave it blank to use the default address.
+To run iABG, you only need to run the `./is/main.py` script.
+
+OPTIONAL: You can change the default Intersight address and the path of API keys.
 
 ```bash
+~$ python main.py -h
+usage: main.py [-h] [--host HOST] [--public-key PUBLIC_KEY] [--private-key PRIVATE_KEY]
+
+iABG - Intersight AsBuilt Generator
+
+options:
+  -h, --help            show this help message and exit
+  --host HOST           Link to Intersight. Default: https://intersight.com
+  --public-key PUBLIC_KEY
+                        Path to the Public API key. Default: ./key/key.txt
+  --private-key PRIVATE_KEY
+                        Path to the Private API key. Default: ./key/SecretKey.txt
+```
+
 # Example
 
-~$ python ./main.py
+```bash
+~$ python main.py --private-key SecretKey.txt --public-key key.txt
 #######################################
 #                                     #
 # iABG - Intersight AsBuilt Generator #
 #                                     #
 #######################################
-
-Leave blank to choose the default address - "https://intersight.com"
-==> INTERSIGHT ADDRESS:
 
 HOST: https://intersight.com
 
@@ -79,7 +93,7 @@ Status code 200, for resource path /hyperflex/Healths
 Status code 200, for resource path /server/Profiles
 Status code 200, for resource path /management/Interfaces
 
-Result save in "export/intersight_output.xlsx"
+Result save in "export/intersight_output_2023-02-02-12-57.xlsx"
 ```
 
 Excel Workbook:
