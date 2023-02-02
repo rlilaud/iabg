@@ -1,2 +1,4 @@
 /venv
 /is/__pycache__
+/is/key.txt
+/is/SecretKey.txt
