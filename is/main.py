@@ -1,14 +1,14 @@
-#from .models import iabgInputForm
+from datetime import datetime
 from intersight_get import intersight_get
 import pandas as pd
 import os
+import argparse
 
-#from .forms import iabgForm
 
 # create a form instance and populate it with data from the request:
 
 
-def createXLSX(host_link, public_api_key, private_api_key):
+def createXLSX(host_link, public_api_key, private_api_key, filename):
     blade_server = intersight_get(resource_path='/compute/Blades',
                                   host=host_link, private_key=private_api_key, public_key=public_api_key)
 
@@ -143,7 +143,7 @@ def createXLSX(host_link, public_api_key, private_api_key):
         columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
     blade_server_df = pd.DataFrame.from_dict(blade_server['Results'])
 
-    with pd.ExcelWriter(r'export/intersight_output.xlsx') as writer:
+    with pd.ExcelWriter(rf'export/{filename}') as writer:
         management_df.to_excel(writer, sheet_name='management')
         service_profile_df.to_excel(
             writer, sheet_name='service_profile')
@@ -164,29 +164,63 @@ def createXLSX(host_link, public_api_key, private_api_key):
             writer, sheet_name='compute_summary')
         blade_server_df.to_excel(writer, sheet_name='blade_server')
 
-    print("\nResult save in \"export/intersight_output.xlsx\"")
+    print(f"\nResult save in \"export/{filename}\"")
 
 
-def api_key():
-    f = open("./key/key.txt", "r")
+def api_key(path):
+    f = open(path, "r")
     return f.read()
 
 
-def api_SecretKey():
-    f = open("./key/SecretKey.txt", "r")
+def api_SecretKey(path):
+    f = open(path, "r")
     return f.read()
+
+
+def forge_filename():
+    today = datetime.today().strftime('%Y-%m-%d-%H-%M')
+    filename = f"intersight_output_{today}.xlsx"
+    return filename
+
+
+def arguments_cli():
+    parser = argparse.ArgumentParser(
+        description='iABG - Intersight AsBuilt Generator')
+    parser.add_argument(
+        '--host', help='Link to Intersight. Default: https://intersight.com')
+    parser.add_argument(
+        '--public-key', help='Path to the Public API key. Default: ./key/key.txt')
+    parser.add_argument(
+        '--private-key', help='Path to the Private API key. Default: ./key/SecretKey.txt')
+
+    args = parser.parse_args()
+
+    if args.host == None:
+        args.host = "https://intersight.com"
+    if args.public_key == None:
+        args.public_key = "./key/key.txt"
+    if args.private_key == None:
+        args.private_key = "./key/SecretKey.txt"
+
+    return [args.host, args.public_key, args.private_key]
 
 
 if __name__ == '__main__':
+
+    arguments = arguments_cli()
+    # arguments[0] -> host
+    # arguments[1] -> public api key
+    # arguments[2] -> private api key
+
     print("#######################################\n#                                     #\n# iABG - Intersight AsBuilt Generator #\n#                                     #\n#######################################")
-    print("\nLeave blank to choose the default address - \"https://intersight.com\"")
-    host_link = input("==> INTERSIGHT ADDRESS: ")
-    if host_link == "":
-        host_link = "https://intersight.com"
-    public_api_key = api_key()
-    private_api_key = api_SecretKey()
-    print(f"\nHOST: {host_link}")
+
+    public_api_key = api_key(arguments[1])
+    private_api_key = api_SecretKey(arguments[2])
+    filename = forge_filename()
+
+    print(f"\nHOST: {arguments[0]}")
     #print(f"\nPUBLIC KEY: \n{public_api_key}")
     #print(f"\nPRIVATE KEY: \n{private_api_key}")
     print("")
-    createXLSX(host_link, public_api_key, private_api_key)
+
+    createXLSX(arguments[0], public_api_key, private_api_key, filename)
