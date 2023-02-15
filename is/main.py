@@ -9,9 +9,10 @@ import argparse
 
 
 def createXLSX(host_link, public_api_key, private_api_key, filename):
+
+    # API request:
     blade_server = intersight_get(resource_path='/compute/Blades',
                                   host=host_link, private_key=private_api_key, public_key=public_api_key)
-
     compute_summary = intersight_get(
         resource_path='/compute/PhysicalSummaries',
         host=host_link, private_key=private_api_key, public_key=public_api_key,
@@ -56,12 +57,6 @@ def createXLSX(host_link, public_api_key, private_api_key, filename):
                                       host=host_link, private_key=private_api_key,
                                       public_key=public_api_key,
                                       query_params={"$select": "ResiliencyDetails"})
-
-    # Due to new call in the API, ls/ServiceProfiles is deprecated
-    # service_profile = intersight_get(resource_path='/ls/ServiceProfiles',
-    #     host=host_link, private_key=private_api_key,
-    #     public_key=public_api_key,
-    #                     query_params={"$filter": "AssignState eq 'assigned'", "$orderby": "OperState"})
     service_profile = intersight_get(resource_path='/server/Profiles',
                                      host=host_link, private_key=private_api_key,
                                      public_key=public_api_key,
@@ -72,14 +67,65 @@ def createXLSX(host_link, public_api_key, private_api_key, filename):
                                         public_key=public_api_key,
                                         query_params={
                                             "$select": "Dn,Ipv4Address,Ipv4Mask,Ipv4Gateway,MacAddress"})
+    view_servers = intersight_get(resource_path='/view/Servers',
+                                  host=host_link, private_key=private_api_key,
+                                  public_key=public_api_key,
+                                  query_params={})
+    adapter_Units = intersight_get(resource_path='/adapter/Units',
+                                   host=host_link, private_key=private_api_key,
+                                   public_key=public_api_key,
+                                   query_params={})
+    equipment_Psus = intersight_get(resource_path='/equipment/Psus',
+                                    host=host_link, private_key=private_api_key,
+                                    public_key=public_api_key,
+                                    query_params={})
+    equipment_FanModules = intersight_get(resource_path='/equipment/FanModules',
+                                          host=host_link, private_key=private_api_key,
+                                          public_key=public_api_key,
+                                          query_params={})
+    storage_PhysicalDisks = intersight_get(resource_path='/storage/PhysicalDisks',
+                                           host=host_link, private_key=private_api_key,
+                                           public_key=public_api_key,
+                                           query_params={})
+    storage_Controllers = intersight_get(resource_path='/storage/Controllers',
+                                         host=host_link, private_key=private_api_key,
+                                         public_key=public_api_key,
+                                         query_params={})
+    memory_Units = intersight_get(resource_path='/memory/Units',
+                                  host=host_link, private_key=private_api_key,
+                                  public_key=public_api_key,
+                                  query_params={})
+    equipment_Chasses = intersight_get(resource_path='/equipment/Chasses',
+                                       host=host_link, private_key=private_api_key,
+                                       public_key=public_api_key,
+                                       query_params={})
+    capability_ChassisDescriptors = intersight_get(resource_path='/capability/ChassisDescriptors',
+                                                   host=host_link, private_key=private_api_key,
+                                                   public_key=public_api_key,
+                                                   query_params={})
+    equipment_IoCards = intersight_get(resource_path='/equipment/IoCards',
+                                       host=host_link, private_key=private_api_key,
+                                       public_key=public_api_key,
+                                       query_params={})
+    fabric_ElementIdentities = intersight_get(resource_path='/fabric/ElementIdentities',
+                                              host=host_link, private_key=private_api_key,
+                                              public_key=public_api_key,
+                                              query_params={})
+    asset_DeviceContractInformations = intersight_get(resource_path='/asset/DeviceContractInformations',
+                                                      host=host_link, private_key=private_api_key,
+                                                      public_key=public_api_key,
+                                                      query_params={})
+    network_ElementSummaries = intersight_get(resource_path='/network/ElementSummaries',
+                                              host=host_link, private_key=private_api_key,
+                                              public_key=public_api_key,
+                                              query_params={})
 
-    # if firmware_running == None:
-    #    return render(request, 'is_abg/broke.html')
-
+    # Clean data:
     management_df = pd.DataFrame.from_dict(
         management_address['Results'])
     management_df = management_df.drop(
         columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
+
     service_profile_df = pd.DataFrame.from_dict(
         service_profile['Results'])
     service_profile_df = service_profile_df.drop(columns=['ClassId', 'Moid', 'ObjectType',
@@ -89,10 +135,12 @@ def createXLSX(host_link, public_api_key, private_api_key, filename):
                                                           'ModTime', 'AccountMoid'], errors='ignore')
     hyperflex_health_df = pd.DataFrame.from_dict(
         hyperflex_health['Results'])
+
     hyperflex_node_df = pd.DataFrame.from_dict(
         hyperflex_node['Results'])
     hyperflex_node_df = hyperflex_node_df.drop(
         columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
+
     hyperflex_cluster_df_list = []
     for i in hyperflex_cluster['Results']:
         # pp.pprint(i['Summary'])
@@ -114,35 +162,43 @@ def createXLSX(host_link, public_api_key, private_api_key, filename):
     fc_ports_df = pd.DataFrame.from_dict(fc_ports['Results'])
     fc_ports_df = fc_ports_df.drop(
         columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
+
     physical_ports_df = pd.DataFrame.from_dict(
         physical_ports['Results'])
     physical_ports_df = physical_ports_df.drop(
         columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
+
     rack_server_df = pd.DataFrame.from_dict(rack_server['Results'])
+
     compute_summary_df = pd.DataFrame.from_dict(
         compute_summary['Results'])
     compute_summary_df = compute_summary_df.drop(
         columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
+
     blade_server_df = pd.DataFrame.from_dict(blade_server['Results'])
 
-    firmware_running_df = pd.DataFrame.from_dict(
-        firmware_running['Results'])
-    firmware_running_df = firmware_running_df.drop(columns=['ClassId', 'Moid', 'ObjectType'],
-                                                   errors='ignore')
-    fc_ports_df = pd.DataFrame.from_dict(fc_ports['Results'])
-    fc_ports_df = fc_ports_df.drop(
-        columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
-    physical_ports_df = pd.DataFrame.from_dict(
-        physical_ports['Results'])
-    physical_ports_df = physical_ports_df.drop(
-        columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
-    rack_server_df = pd.DataFrame.from_dict(rack_server['Results'])
-    compute_summary_df = pd.DataFrame.from_dict(
-        compute_summary['Results'])
-    compute_summary_df = compute_summary_df.drop(
-        columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
-    blade_server_df = pd.DataFrame.from_dict(blade_server['Results'])
+    view_servers_df = pd.DataFrame.from_dict(view_servers['Results'])
+    adapter_Units_df = pd.DataFrame.from_dict(adapter_Units['Results'])
+    equipment_Psus_df = pd.DataFrame.from_dict(equipment_Psus['Results'])
+    equipment_FanModules_df = pd.DataFrame.from_dict(
+        equipment_FanModules['Results'])
+    storage_PhysicalDisks_df = pd.DataFrame.from_dict(
+        storage_PhysicalDisks['Results'])
+    storage_Controllers_df = pd.DataFrame.from_dict(
+        storage_Controllers['Results'])
+    memory_Units_df = pd.DataFrame.from_dict(memory_Units['Results'])
+    equipment_Chasses_df = pd.DataFrame.from_dict(equipment_Chasses['Results'])
+    capability_ChassisDescriptors_df = pd.DataFrame.from_dict(
+        capability_ChassisDescriptors['Results'])
+    equipment_IoCards_df = pd.DataFrame.from_dict(equipment_IoCards['Results'])
+    fabric_ElementIdentities_df = pd.DataFrame.from_dict(
+        fabric_ElementIdentities['Results'])
+    asset_DeviceContractInformations_df = pd.DataFrame.from_dict(
+        asset_DeviceContractInformations['Results'])
+    network_ElementSummaries_df = pd.DataFrame.from_dict(
+        network_ElementSummaries['Results'])
 
+    # Creation of the Excel sheet:
     with pd.ExcelWriter(rf'export/{filename}') as writer:
         management_df.to_excel(writer, sheet_name='management')
         service_profile_df.to_excel(
@@ -160,9 +216,26 @@ def createXLSX(host_link, public_api_key, private_api_key, filename):
         fc_ports_df.to_excel(writer, sheet_name='fc_ports')
         physical_ports_df.to_excel(writer, sheet_name='physical_ports')
         rack_server_df.to_excel(writer, sheet_name='rack_server')
-        compute_summary_df.to_excel(
-            writer, sheet_name='compute_summary')
+        compute_summary_df.to_excel(writer, sheet_name='compute_summary')
         blade_server_df.to_excel(writer, sheet_name='blade_server')
+        view_servers_df.to_excel(writer, sheet_name='view_servers')
+        adapter_Units_df.to_excel(writer, sheet_name='adapter_Units')
+        equipment_Psus_df.to_excel(writer, sheet_name='psus')
+        equipment_FanModules_df.to_excel(writer, sheet_name='FanModules')
+        storage_PhysicalDisks_df.to_excel(writer, sheet_name='PhysicalDisks')
+        storage_Controllers_df.to_excel(
+            writer, sheet_name='storage_Controllers')
+        memory_Units_df.to_excel(writer, sheet_name='memory_Units')
+        equipment_Chasses_df.to_excel(writer, sheet_name='chassis')
+        capability_ChassisDescriptors_df.to_excel(
+            writer, sheet_name='ChassisDescriptors')
+        equipment_IoCards_df.to_excel(writer, sheet_name='equipment_IoCards')
+        fabric_ElementIdentities_df.to_excel(
+            writer, sheet_name='fabric_ElementIdentities')
+        asset_DeviceContractInformations_df.to_excel(
+            writer, sheet_name='DeviceContract')
+        network_ElementSummaries_df.to_excel(
+            writer, sheet_name='network_Element')
 
     print(f"\nResult save in \"export/{filename}\"")
 
