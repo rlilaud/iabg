@@ -13,6 +13,13 @@ Reports on:
 * FC and Ethernet Interfaces
 * Service Profiles
 * Management Interfaces
+* Chassis
+* Fabric Interconnect
+* Contract
+* PSUs
+* Fan Modules
+* Disks and Controllers
+* Io Cards
 
 Overview: 
 * Uses the intersight_rest API to pull data from Intersight.
