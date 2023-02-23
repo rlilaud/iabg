@@ -106,6 +106,16 @@ def createXLSX(host_link, public_api_key, private_api_key, filename):
     network_ElementSummaries = intersight_get(resource_path='/network/ElementSummaries',
                                               host=host_link, private_key=private_api_key,
                                               public_key=public_api_key)
+    equipment_tpms = intersight_get(resource_path='/equipment/Tpms',
+                                    host=host_link, private_key=private_api_key,
+                                    public_key=public_api_key)
+    cond_HclStatusDetails = intersight_get(resource_path='/cond/HclStatusDetails',
+                                           host=host_link, private_key=private_api_key,
+                                           public_key=public_api_key)
+    processor_units = intersight_get(resource_path='/processor/Units',
+                                     host=host_link, private_key=private_api_key,
+                                     public_key=public_api_key)
+
     # Clean data:
     management_df = pd.DataFrame.from_dict(
         management_address['Results'])
@@ -222,6 +232,19 @@ def createXLSX(host_link, public_api_key, private_api_key, filename):
     network_ElementSummaries_df = network_ElementSummaries_df.filter(items=['AccountMoid', 'AdminInbandInterfaceState', 'BundleVersion', 'Chassis', 'ConnectionStatus', 'DeviceMoid', 'Dn', 'EthernetSwitchingMode', 'FcSwitchingMode', 'Firmware', 'FirmwareVersion', 'InbandIpAddress', 'InbandIpGateway',
                                                                      'InbandIpMask', 'InbandVlan', 'Ipv4Address', 'ManagementMode', 'Model', 'Moid', 'Name', 'NumEtherPorts', 'Operability', 'OutOfBandIpAddress', 'OutOfBandIpGateway', 'OutOfBandIpMask', 'OutOfBandMac', 'PartNumber', 'Serial', 'Status', 'SwitchType', 'SystemUpTime', 'Vendor', 'Version'])
 
+    equipment_tpms_df = pd.DataFrame.from_dict(equipment_tpms['Results'])
+    equipment_tpms_df = equipment_tpms_df.filter(items=['AccountMoid', 'ActivationStatus', 'AdminState', 'DeviceMoid',
+                                                 'Dn', 'FirmwareVersion', 'InventoryDeviceInfo', 'Model', 'Moid', 'Presence', 'Serial', 'TpmId', 'Vendor', 'Version'])
+
+    cond_HclStatusDetails_df = pd.DataFrame.from_dict(
+        cond_HclStatusDetails['Results'])
+    cond_HclStatusDetails_df = cond_HclStatusDetails_df.filter(items=['AccountMoid', 'HardwareStatus', 'HclCimcVersion', 'HclDriverName', 'HclDriverVersion', 'HclFirmwareVersion',
+                                                               'HclModel', 'InvCimcVersion', 'InvDriverName', 'InvDriverVersion', 'InvFirmwareVersion', 'InvModel', 'Moid', 'Reason', 'SoftwareStatus', 'Status'])
+
+    processor_units_df = pd.DataFrame.from_dict(processor_units['Results'])
+    processor_units_df = processor_units_df.filter(items=['AccountMoid', 'Architecture', 'DeviceMoId', 'Dn', 'Model', 'Moid', 'NumCores',
+                                                   'NumCoresEnabled', 'NumThreads', 'OperPowerState', 'OperState', 'Presence', 'ProcessorId', 'Serial', 'SocketDesignation', 'Speed', 'Vendor'])
+
     # Creation of the Excel sheet:
     with pd.ExcelWriter(rf'export/{filename}') as writer:
         management_df.to_excel(writer, sheet_name='management')
@@ -260,6 +283,12 @@ def createXLSX(host_link, public_api_key, private_api_key, filename):
             writer, sheet_name='DeviceContract')
         network_ElementSummaries_df.to_excel(
             writer, sheet_name='network_Element')
+        equipment_tpms_df.to_excel(
+            writer, sheet_name='tpms')
+        cond_HclStatusDetails_df.to_excel(
+            writer, sheet_name='HclStatusDetails')
+        processor_units_df.to_excel(
+            writer, sheet_name='processor')
 
     print(f"\nResult save in \"export/{filename}\"")
 
