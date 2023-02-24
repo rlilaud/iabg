@@ -242,8 +242,28 @@ def createXLSX(host_link, public_api_key, private_api_key, filename):
     # Creation of the Excel sheet:
     with pd.ExcelWriter(rf'export/{filename}') as writer:
         management_df.to_excel(writer, sheet_name='management')
+        firmware_running_df.to_excel(
+            writer, sheet_name='firmware_running')
+        asset_DeviceContractInformations_df.to_excel(
+            writer, sheet_name='DeviceContract')
+        view_servers_df.to_excel(writer, sheet_name='view_servers')
+        compute_summary_df.to_excel(writer, sheet_name='compute_summary')
+
         service_profile_df.to_excel(
             writer, sheet_name='service_profile')
+        rack_server_df.to_excel(writer, sheet_name='rack_server')
+        blade_server_df.to_excel(writer, sheet_name='blade_server')
+        equipment_Chasses_df.to_excel(writer, sheet_name='chassis')
+        capability_ChassisDescriptors_df.to_excel(
+            writer, sheet_name='ChassisDescriptors')
+
+        network_ElementSummaries_df.to_excel(
+            writer, sheet_name='network_Element')
+        fabric_ElementIdentities_df.to_excel(
+            writer, sheet_name='fabric_ElementIdentities')
+        fc_ports_df.to_excel(writer, sheet_name='fc_ports')
+        physical_ports_df.to_excel(writer, sheet_name='physical_ports')
+
         hyperflex_health_df.to_excel(
             writer, sheet_name='hyperflex_health')
         hyperflex_node_df.to_excel(writer, sheet_name='hyperflex_node')
@@ -252,14 +272,7 @@ def createXLSX(host_link, public_api_key, private_api_key, filename):
                 hyperflex_cluster_unit_df["Name"].values[0]
             hyperflex_cluster_unit_df.to_excel(
                 writer, sheet_name=sheet_name)
-        firmware_running_df.to_excel(
-            writer, sheet_name='firmware_running')
-        fc_ports_df.to_excel(writer, sheet_name='fc_ports')
-        physical_ports_df.to_excel(writer, sheet_name='physical_ports')
-        rack_server_df.to_excel(writer, sheet_name='rack_server')
-        compute_summary_df.to_excel(writer, sheet_name='compute_summary')
-        blade_server_df.to_excel(writer, sheet_name='blade_server')
-        view_servers_df.to_excel(writer, sheet_name='view_servers')
+
         adapter_Units_df.to_excel(writer, sheet_name='adapter_Units')
         equipment_Psus_df.to_excel(writer, sheet_name='psus')
         equipment_FanModules_df.to_excel(writer, sheet_name='FanModules')
@@ -267,16 +280,7 @@ def createXLSX(host_link, public_api_key, private_api_key, filename):
         storage_Controllers_df.to_excel(
             writer, sheet_name='storage_Controllers')
         memory_Units_df.to_excel(writer, sheet_name='memory_Units')
-        equipment_Chasses_df.to_excel(writer, sheet_name='chassis')
-        capability_ChassisDescriptors_df.to_excel(
-            writer, sheet_name='ChassisDescriptors')
         equipment_IoCards_df.to_excel(writer, sheet_name='equipment_IoCards')
-        fabric_ElementIdentities_df.to_excel(
-            writer, sheet_name='fabric_ElementIdentities')
-        asset_DeviceContractInformations_df.to_excel(
-            writer, sheet_name='DeviceContract')
-        network_ElementSummaries_df.to_excel(
-            writer, sheet_name='network_Element')
         equipment_tpms_df.to_excel(
             writer, sheet_name='tpms')
         cond_HclStatusDetails_df.to_excel(
