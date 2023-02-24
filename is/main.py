@@ -12,15 +12,12 @@ def createXLSX(host_link, public_api_key, private_api_key, filename):
 
     # API request:
     blade_server = intersight_get(resource_path='/compute/Blades',
-                                  host=host_link, private_key=private_api_key, public_key=public_api_key)
+                                  host=host_link, private_key=private_api_key, public_key=public_api_key, query_params={"$orderby": "Dn"})
     compute_summary = intersight_get(
         resource_path='/compute/PhysicalSummaries',
-        host=host_link, private_key=private_api_key, public_key=public_api_key,
-        query_params={
-            "$select": "AvailableMemory,CpuCapacity,Dn,Firmware,Model,Name,OperPowerState,OperState"
-        })
+        host=host_link, private_key=private_api_key, public_key=public_api_key, query_params={"$orderby": "Dn"})
     rack_server = intersight_get(resource_path='/compute/RackUnits',
-                                 host=host_link, private_key=private_api_key, public_key=public_api_key)
+                                 host=host_link, private_key=private_api_key, public_key=public_api_key, query_params={"$orderby": "Dn"})
     physical_ports = intersight_get(
         resource_path='/ether/PhysicalPorts',
         host=host_link, private_key=private_api_key, public_key=public_api_key,
@@ -35,14 +32,12 @@ def createXLSX(host_link, public_api_key, private_api_key, filename):
                               query_params={
                                   "$filter": "OperState eq 'up'",
                                   "$orderby": "Dn",
-                                  "$select": "PortChannelId,OperSpeed,Dn,Mode,OperState,Wwn"
-                              })
+                                  "$select": "PortChannelId,OperSpeed,Dn,Mode,OperState,Wwn"})
     firmware_running = intersight_get(resource_path='/firmware/RunningFirmwares',
                                       host=host_link, private_key=private_api_key,
                                       public_key=public_api_key,
                                       query_params={
-                                          "$orderby": "Type",
-                                          "$select": "Dn,Type,Version,PackageVersion,ObjectType,Component"})
+                                          "$orderby": "Type"})
     hyperflex_cluster = intersight_get(resource_path='/hyperflex/Clusters',
                                        host=host_link, private_key=private_api_key,
                                        public_key=public_api_key,
@@ -59,44 +54,40 @@ def createXLSX(host_link, public_api_key, private_api_key, filename):
                                       query_params={"$select": "ResiliencyDetails"})
     service_profile = intersight_get(resource_path='/server/Profiles',
                                      host=host_link, private_key=private_api_key,
-                                     public_key=public_api_key,
-                                     query_params={"$filter": "AssignedServer ne 'null'",
-                                                   "$orderby": "ModTime"})
+                                     public_key=public_api_key)
     management_address = intersight_get(resource_path='/management/Interfaces',
                                         host=host_link, private_key=private_api_key,
-                                        public_key=public_api_key,
-                                        query_params={
-                                            "$select": "Dn,Ipv4Address,Ipv4Mask,Ipv4Gateway,MacAddress"})
+                                        public_key=public_api_key, query_params={"$orderby": "Dn"})
     view_servers = intersight_get(resource_path='/view/Servers',
                                   host=host_link, private_key=private_api_key,
-                                  public_key=public_api_key)
+                                  public_key=public_api_key, query_params={"$orderby": "Dn"})
     adapter_Units = intersight_get(resource_path='/adapter/Units',
                                    host=host_link, private_key=private_api_key,
-                                   public_key=public_api_key)
+                                   public_key=public_api_key, query_params={"$orderby": "Dn"})
     equipment_Psus = intersight_get(resource_path='/equipment/Psus',
                                     host=host_link, private_key=private_api_key,
-                                    public_key=public_api_key)
+                                    public_key=public_api_key, query_params={"$orderby": "Dn"})
     equipment_FanModules = intersight_get(resource_path='/equipment/FanModules',
                                           host=host_link, private_key=private_api_key,
-                                          public_key=public_api_key)
+                                          public_key=public_api_key, query_params={"$orderby": "Dn"})
     storage_PhysicalDisks = intersight_get(resource_path='/storage/PhysicalDisks',
                                            host=host_link, private_key=private_api_key,
-                                           public_key=public_api_key)
+                                           public_key=public_api_key, query_params={"$orderby": "Dn"})
     storage_Controllers = intersight_get(resource_path='/storage/Controllers',
                                          host=host_link, private_key=private_api_key,
-                                         public_key=public_api_key)
+                                         public_key=public_api_key, query_params={"$orderby": "Dn"})
     memory_Units = intersight_get(resource_path='/memory/Units',
                                   host=host_link, private_key=private_api_key,
-                                  public_key=public_api_key)
+                                  public_key=public_api_key, query_params={"$orderby": "Dn"})
     equipment_Chasses = intersight_get(resource_path='/equipment/Chasses',
                                        host=host_link, private_key=private_api_key,
-                                       public_key=public_api_key)
+                                       public_key=public_api_key, query_params={"$orderby": "Dn"})
     capability_ChassisDescriptors = intersight_get(resource_path='/capability/ChassisDescriptors',
                                                    host=host_link, private_key=private_api_key,
                                                    public_key=public_api_key)
     equipment_IoCards = intersight_get(resource_path='/equipment/IoCards',
                                        host=host_link, private_key=private_api_key,
-                                       public_key=public_api_key)
+                                       public_key=public_api_key, query_params={"$orderby": "Dn"})
     fabric_ElementIdentities = intersight_get(resource_path='/fabric/ElementIdentities',
                                               host=host_link, private_key=private_api_key,
                                               public_key=public_api_key)
@@ -105,30 +96,28 @@ def createXLSX(host_link, public_api_key, private_api_key, filename):
                                                       public_key=public_api_key)
     network_ElementSummaries = intersight_get(resource_path='/network/ElementSummaries',
                                               host=host_link, private_key=private_api_key,
-                                              public_key=public_api_key)
+                                              public_key=public_api_key, query_params={"$orderby": "Dn"})
     equipment_tpms = intersight_get(resource_path='/equipment/Tpms',
                                     host=host_link, private_key=private_api_key,
-                                    public_key=public_api_key)
+                                    public_key=public_api_key, query_params={"$orderby": "Dn"})
     cond_HclStatusDetails = intersight_get(resource_path='/cond/HclStatusDetails',
                                            host=host_link, private_key=private_api_key,
                                            public_key=public_api_key)
     processor_units = intersight_get(resource_path='/processor/Units',
                                      host=host_link, private_key=private_api_key,
-                                     public_key=public_api_key)
+                                     public_key=public_api_key, query_params={"$orderby": "Dn"})
 
     # Clean data:
     management_df = pd.DataFrame.from_dict(
         management_address['Results'])
-    management_df = management_df.drop(
-        columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
+    management_df = management_df.filter(items=['DeviceMoid', 'Dn', 'Gateway', 'HostName', 'IpAddress', 'Ipv4Address', 'Ipv4Gateway',
+                                         'Ipv4Mask', 'Ipv6Address', 'Ipv6Gateway', 'Ipv6Prefix', 'MacAddress', 'Mask', 'Moid', 'SwitchId', 'UemConnStatus', 'VirtualHostName', 'VlanId'])
 
     service_profile_df = pd.DataFrame.from_dict(
         service_profile['Results'])
-    service_profile_df = service_profile_df.drop(columns=['ClassId', 'Moid', 'ObjectType',
-                                                          'Owners', 'DeviceMoId', 'DomainGroupMoid',
-                                                          'CreateTime', 'PermissionResources',
-                                                          'RegisteredDevice', 'Rn', 'SharedScope', 'Tags',
-                                                          'ModTime', 'AccountMoid'], errors='ignore')
+    service_profile_df = service_profile_df.filter(items=['Action', 'AssignedServer', 'AssociatedServer', 'Description', 'Moid', 'Name',
+                                                   'ServerAssignmentMode', 'SrcTemplate', 'ServerPool', 'StaticUuidAddress', 'TargetPlatform', 'Type', 'Uuid', 'UuidAddressType', 'UuidLease', 'UuidPool'])
+
     hyperflex_health_df = pd.DataFrame.from_dict(
         hyperflex_health['Results'])
 
@@ -153,8 +142,9 @@ def createXLSX(host_link, public_api_key, private_api_key, filename):
 
     firmware_running_df = pd.DataFrame.from_dict(
         firmware_running['Results'])
-    firmware_running_df = firmware_running_df.drop(columns=['ClassId', 'Moid', 'ObjectType'],
-                                                   errors='ignore')
+    firmware_running_df = firmware_running_df.filter(
+        items=['Component', 'DeviceMoid', 'Dn', 'InventoryDeviceInfo', 'Moid', 'PackageVersion', 'Rn', 'Type', 'Version'])
+
     fc_ports_df = pd.DataFrame.from_dict(fc_ports['Results'])
     fc_ports_df = fc_ports_df.drop(
         columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
@@ -165,84 +155,88 @@ def createXLSX(host_link, public_api_key, private_api_key, filename):
         columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
 
     rack_server_df = pd.DataFrame.from_dict(rack_server['Results'])
+    rack_server_df = rack_server_df.filter(items=['AdminPowerState', 'AssetTag', 'AvailableMemory', 'ConnectionStatus', 'DeviceMoid', 'Dn', 'HardwareUuid', 'KvmIpAddresses', 'KvmServerStateEnabled', 'KvmVendor', 'Lifecycle', 'ManagementMode', 'MemorySpeed', 'MgmtIpAddress',
+                                           'Model', 'Moid', 'Name', 'NumAdaptors', 'NumCpuCores', 'NumCpuCoresEnabled', 'NumCpus', 'NumEthHostInterfaces', 'NumFcHostInterfaces', 'NumThreads', 'OperPowerState', 'OperState', 'PlatformType', 'Presence', 'Serial', 'ServerId', 'ServiceProfile', 'TunneledKvm', 'Uuid', 'Vendor'])
 
     compute_summary_df = pd.DataFrame.from_dict(
         compute_summary['Results'])
-    compute_summary_df = compute_summary_df.drop(
-        columns=['ClassId', 'Moid', 'ObjectType'], errors='ignore')
+    compute_summary_df = compute_summary_df.filter(items=['AdminPowerState', 'AssetTag', 'AvailableMemory', 'ChassisId', 'ConnectionStatus', 'DeviceMoid', 'Dn', 'Firmware', 'HardwareUuid', 'Ipv4Address', 'KvmIpAddresses', 'KvmServerStateEnabled', 'KvmVendor', 'LifeCycle', 'ManagementMode', 'MemorySpeed',
+                                                   'MgmtIpAddress', 'Model', 'Moid', 'Name', 'NumAdaptors', 'NumCpuCores', 'NumCpuCoresEnabled', 'NumCpus', 'NumEthHostInterfaces', 'NumFcHostInterfaces', 'NumThreads', 'OperPowerState', 'OperState', 'PlatformType', 'Presence', 'Serial', 'ServerId', 'ServiceProfile', 'SlotId', 'TotalMemory', 'TunneledKvm', 'Uuid', 'Vendor'])
 
     blade_server_df = pd.DataFrame.from_dict(blade_server['Results'])
+    blade_server_df = blade_server_df.filter(items=['AdminPowerState', 'AssetTag', 'AvailableMemory', 'ConnectionStatus', 'DeviceMoid', 'Dn', 'HardwareUuid', 'KvmIpAddresses', 'KvmServerStateEnabled', 'KvmVendor', 'Lifecycle', 'ManagementMode', 'MemorySpeed', 'MgmtIpAddress', 'Model',
+                                             'Moid', 'Name', 'NumAdaptors', 'NumCpuCores', 'NumCpuCoresEnabled', 'NumCpus', 'NumEthHostInterfaces', 'NumFcHostInterfaces', 'NumThreads', 'OperPowerState', 'OperState', 'PlatformType', 'Presence', 'Serial', 'ServiceProfile', 'SlotId', 'TotalMemory', 'TunneledKvm', 'Uuid', 'Vendor'])
 
     view_servers_df = pd.DataFrame.from_dict(view_servers['Results'])
     view_servers_df = view_servers_df.filter(
-        items=['AccountMoid', 'AssetDeviceContractInformation', 'AvailableMemory', 'ConnectionStatus', 'DeviceMoId', 'Dn', 'HardwareUuid', 'KvmIpAddresses', 'ManagementMode', 'MemorySpeed', 'MgmtIpAddress', 'Model', 'Moid', 'Name', 'PlatformType', 'Serial', 'ServerProfile', 'Uuid', 'ChassisId', 'SlotId'])
+        items=['AssetDeviceContractInformation', 'AvailableMemory', 'ConnectionStatus', 'DeviceMoId', 'Dn', 'HardwareUuid', 'KvmIpAddresses', 'ManagementMode', 'MemorySpeed', 'MgmtIpAddress', 'Model', 'Moid', 'Name', 'PlatformType', 'Serial', 'ServerProfile', 'Uuid', 'ChassisId', 'SlotId'])
 
     adapter_Units_df = pd.DataFrame.from_dict(adapter_Units['Results'])
     adapter_Units_df = adapter_Units_df.filter(
-        items=['AccountMoid', 'AdapterId', 'BaseMacAddress', 'DeviceMoId', 'Dn', 'Model', 'Moid', 'Presence', 'Serial'])
+        items=['AdapterId', 'BaseMacAddress', 'DeviceMoId', 'Dn', 'Model', 'Moid', 'Presence', 'Serial'])
 
     equipment_Psus_df = pd.DataFrame.from_dict(equipment_Psus['Results'])
-    equipment_Psus_df = equipment_Psus_df.filter(items=['AccountMoid', 'Description', 'DeviceMoid', 'Dn', 'Model',
+    equipment_Psus_df = equipment_Psus_df.filter(items=['Description', 'DeviceMoid', 'Dn', 'Model',
                                                  'Moid', 'Name', 'OperState', 'Presence', 'PsuFwVersion', 'PsuId', 'PsuType', 'PsuWattage', 'Serial', 'Sku'])
 
     equipment_FanModules_df = pd.DataFrame.from_dict(
         equipment_FanModules['Results'])
     equipment_FanModules_df = equipment_FanModules_df.filter(
-        items=['AccountMoid', 'Description', 'DeviceMoid', 'Dn', 'Model', 'ModuleId', 'Moid', 'OperState', 'Presence', 'Serial', 'Sku'])
+        items=['Description', 'DeviceMoid', 'Dn', 'Model', 'ModuleId', 'Moid', 'OperState', 'Presence', 'Serial', 'Sku'])
 
     storage_PhysicalDisks_df = pd.DataFrame.from_dict(
         storage_PhysicalDisks['Results'])
-    storage_PhysicalDisks_df = storage_PhysicalDisks_df.filter(items=['AccountMoid', 'DeviceMoid', 'DiskId', 'DiskState', 'Dn', 'DriveFirmware', 'DriveState',
+    storage_PhysicalDisks_df = storage_PhysicalDisks_df.filter(items=['DeviceMoid', 'DiskId', 'DiskState', 'Dn', 'DriveFirmware', 'DriveState',
                                                                'EncryptionStatus', 'FailurePredicted', 'Model', 'Moid', 'Name', 'OperPowerState', 'Pid', 'Presence', 'Protocol', 'Serial', 'Size', 'Type', 'Vendor'])
 
     storage_Controllers_df = pd.DataFrame.from_dict(
         storage_Controllers['Results'])
-    storage_Controllers_df = storage_Controllers_df.filter(items=['AccountMoid', 'ControllerId', 'ControllerStatus', 'DeviceMoid', 'Dn', 'HwRevision', 'InterfaceType',
+    storage_Controllers_df = storage_Controllers_df.filter(items=['ControllerId', 'ControllerStatus', 'DeviceMoid', 'Dn', 'HwRevision', 'InterfaceType',
                                                            'InventoryDeviceInfo', 'Model', 'Moid', 'Name', 'OperState', 'PciAddr', 'PciSlot', 'Presence', 'RaidSupport', 'Serial', 'Type', 'Vendor'])
 
     memory_Units_df = pd.DataFrame.from_dict(memory_Units['Results'])
-    memory_Units_df = memory_Units_df.filter(items=['AccountMoid', 'Capacity', 'Clock', 'DeviceMoid', 'Dn', 'FormFactor',
+    memory_Units_df = memory_Units_df.filter(items=['Capacity', 'Clock', 'DeviceMoid', 'Dn', 'FormFactor',
                                              'Location', 'MemoryId', 'Model', 'Moid', 'OperState', 'Operability', 'Presence', 'Serial', 'Type', 'Vendor'])
 
     equipment_Chasses_df = pd.DataFrame.from_dict(equipment_Chasses['Results'])
-    equipment_Chasses_df = equipment_Chasses_df.filter(items=['AccountMoid', 'ChassisId', 'Description', 'DeviceMoid', 'Dn', 'ManagementInterface',
+    equipment_Chasses_df = equipment_Chasses_df.filter(items=['ChassisId', 'Description', 'DeviceMoid', 'Dn', 'ManagementInterface',
                                                        'ManagementMode', 'Model', 'Moid', 'Name', 'OperSate', 'PartNumber', 'Pid', 'ProductName', 'Serial', 'Sku', 'Vendor'])
 
     capability_ChassisDescriptors_df = pd.DataFrame.from_dict(
         capability_ChassisDescriptors['Results'])
     capability_ChassisDescriptors_df = capability_ChassisDescriptors_df.filter(
-        items=['AccountMoid', 'Description', 'Model', 'Moid', 'Vendor', 'Version'])
+        items=['Description', 'Model', 'Moid', 'Vendor', 'Version'])
 
     equipment_IoCards_df = pd.DataFrame.from_dict(equipment_IoCards['Results'])
-    equipment_IoCards_df = equipment_IoCards_df.filter(items=['AccountMoid', 'DcSupported', 'Description', 'DeviceMoid', 'Dn', 'InbandIpAddresses',
+    equipment_IoCards_df = equipment_IoCards_df.filter(items=['DcSupported', 'Description', 'DeviceMoid', 'Dn', 'InbandIpAddresses',
                                                        'Model', 'ModuleId', 'Moid', 'OperState', 'PartNumber', 'Pid', 'Presence', 'ProductName', 'Serial', 'Side', 'Sku', 'Vendor', 'Version'])
 
     fabric_ElementIdentities_df = pd.DataFrame.from_dict(
         fabric_ElementIdentities['Results'])
     fabric_ElementIdentities_df = fabric_ElementIdentities_df.filter(
-        items=['AccountMoid', 'Domain', 'Model', 'Moid', 'Serial', 'Vendor'])
+        items=['Domain', 'Model', 'Moid', 'Serial', 'Vendor'])
 
     asset_DeviceContractInformations_df = pd.DataFrame.from_dict(
         asset_DeviceContractInformations['Results'])
     asset_DeviceContractInformations_df = asset_DeviceContractInformations_df.filter(
-        items=['AccountMoid', 'Contract', 'ContractStatus', 'ContractUpdatedTime', 'DeviceId', 'DeviceType', 'EndCustomer', 'EndUserGlobalUltimate', 'IsValid', 'ItemType', 'Moid', 'PlatformType', 'PurchaseOrderNumber', 'SalesOrderNumber', 'Description', 'ServiceEndDate', 'ServiceStartDate', 'StateContract', 'WarrantyEndDate', 'WarrantyType'])
+        items=['Contract', 'ContractStatus', 'ContractUpdatedTime', 'DeviceId', 'DeviceType', 'EndCustomer', 'EndUserGlobalUltimate', 'IsValid', 'ItemType', 'Moid', 'PlatformType', 'PurchaseOrderNumber', 'SalesOrderNumber', 'Description', 'ServiceEndDate', 'ServiceStartDate', 'StateContract', 'WarrantyEndDate', 'WarrantyType'])
 
     network_ElementSummaries_df = pd.DataFrame.from_dict(
         network_ElementSummaries['Results'])
-    network_ElementSummaries_df = network_ElementSummaries_df.filter(items=['AccountMoid', 'AdminInbandInterfaceState', 'BundleVersion', 'Chassis', 'ConnectionStatus', 'DeviceMoid', 'Dn', 'EthernetSwitchingMode', 'FcSwitchingMode', 'Firmware', 'FirmwareVersion', 'InbandIpAddress', 'InbandIpGateway',
+    network_ElementSummaries_df = network_ElementSummaries_df.filter(items=['AdminInbandInterfaceState', 'BundleVersion', 'Chassis', 'ConnectionStatus', 'DeviceMoid', 'Dn', 'EthernetSwitchingMode', 'FcSwitchingMode', 'Firmware', 'FirmwareVersion', 'InbandIpAddress', 'InbandIpGateway',
                                                                      'InbandIpMask', 'InbandVlan', 'Ipv4Address', 'ManagementMode', 'Model', 'Moid', 'Name', 'NumEtherPorts', 'Operability', 'OutOfBandIpAddress', 'OutOfBandIpGateway', 'OutOfBandIpMask', 'OutOfBandMac', 'PartNumber', 'Serial', 'Status', 'SwitchType', 'SystemUpTime', 'Vendor', 'Version'])
 
     equipment_tpms_df = pd.DataFrame.from_dict(equipment_tpms['Results'])
-    equipment_tpms_df = equipment_tpms_df.filter(items=['AccountMoid', 'ActivationStatus', 'AdminState', 'DeviceMoid',
+    equipment_tpms_df = equipment_tpms_df.filter(items=['ActivationStatus', 'AdminState', 'DeviceMoid',
                                                  'Dn', 'FirmwareVersion', 'InventoryDeviceInfo', 'Model', 'Moid', 'Presence', 'Serial', 'TpmId', 'Vendor', 'Version'])
 
     cond_HclStatusDetails_df = pd.DataFrame.from_dict(
         cond_HclStatusDetails['Results'])
-    cond_HclStatusDetails_df = cond_HclStatusDetails_df.filter(items=['AccountMoid', 'HardwareStatus', 'HclCimcVersion', 'HclDriverName', 'HclDriverVersion', 'HclFirmwareVersion',
+    cond_HclStatusDetails_df = cond_HclStatusDetails_df.filter(items=['HardwareStatus', 'HclCimcVersion', 'HclDriverName', 'HclDriverVersion', 'HclFirmwareVersion',
                                                                'HclModel', 'InvCimcVersion', 'InvDriverName', 'InvDriverVersion', 'InvFirmwareVersion', 'InvModel', 'Moid', 'Reason', 'SoftwareStatus', 'Status'])
 
     processor_units_df = pd.DataFrame.from_dict(processor_units['Results'])
-    processor_units_df = processor_units_df.filter(items=['AccountMoid', 'Architecture', 'DeviceMoId', 'Dn', 'Model', 'Moid', 'NumCores',
+    processor_units_df = processor_units_df.filter(items=['Architecture', 'DeviceMoId', 'Dn', 'Model', 'Moid', 'NumCores',
                                                    'NumCoresEnabled', 'NumThreads', 'OperPowerState', 'OperState', 'Presence', 'ProcessorId', 'Serial', 'SocketDesignation', 'Speed', 'Vendor'])
 
     # Creation of the Excel sheet:
@@ -304,7 +298,7 @@ def api_SecretKey(path):
 
 
 def forge_filename():
-    today = datetime.today().strftime('%Y-%m-%d-%H-%M')
+    today = datetime.today().strftime('%Y-%m-%d_%H-%M')
     filename = f"intersight_output_{today}.xlsx"
     return filename
 
