@@ -8,18 +8,20 @@ Automatic generation of base AsBuilt documents for Intersight.
 
 Reports on:
 * Firmware
-* Blade and rackmount servers
+* Blade and Rackmount servers
 * Hyperflex
 * FC and Ethernet Interfaces
 * Service Profiles
 * Management Interfaces
 * Chassis
 * Fabric Interconnect
-* Contract
+* Device Contract
 * PSUs
 * Fan Modules
 * Disks and Controllers
 * Io Cards
+* CPUs & TPMs
+* HCL Status
 
 Overview: 
 * Uses the intersight_rest API to pull data from Intersight.
@@ -99,8 +101,24 @@ Status code 200, for resource path /hyperflex/Nodes
 Status code 200, for resource path /hyperflex/Healths
 Status code 200, for resource path /server/Profiles
 Status code 200, for resource path /management/Interfaces
+Status code 200, for resource path /view/Servers
+Status code 200, for resource path /adapter/Units
+Status code 200, for resource path /equipment/Psus
+Status code 200, for resource path /equipment/FanModules
+Status code 200, for resource path /storage/PhysicalDisks
+Status code 200, for resource path /storage/Controllers
+Status code 200, for resource path /memory/Units
+Status code 200, for resource path /equipment/Chasses
+Status code 200, for resource path /capability/ChassisDescriptors
+Status code 200, for resource path /equipment/IoCards
+Status code 200, for resource path /fabric/ElementIdentities
+Status code 200, for resource path /asset/DeviceContractInformations
+Status code 200, for resource path /network/ElementSummaries
+Status code 200, for resource path /equipment/Tpms
+Status code 200, for resource path /cond/HclStatusDetails
+Status code 200, for resource path /processor/Units
 
-Result save in "export/intersight_output_2023-02-02-12-57.xlsx"
+Result save in "export/intersight_output_2023-02-26_20-31.xlsx"
 ```
 
 Excel Workbook:
